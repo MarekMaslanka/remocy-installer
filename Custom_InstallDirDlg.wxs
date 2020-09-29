@@ -17,11 +17,11 @@
 								<Control Id="InstallShortcutCheckbox" Type="CheckBox" 
 									X="20" Y="140" Width="200" Height="17" 
 									Property="INSTALLSHORTCUT" CheckBoxValue="1" 
-									Text="Do you want to create a start menu shortcut?" />
+									Text="Create a start menu shortcut" />
 								<Control Id="InstallDesktopShortcutCheckbox" Type="CheckBox" 
-									X="18" Y="160" Width="200" Height="17" 
+									X="20" Y="160" Width="200" Height="17" 
 									Property="INSTALLDESKTOPSHORTCUT" CheckBoxValue="1" 
-									Text="Do you want to create a desktop shortcut?" />
+									Text="Create a desktop shortcut" />
                 <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="!(loc.WixUINext)" />
                 <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="!(loc.WixUIBack)" />
                 <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">

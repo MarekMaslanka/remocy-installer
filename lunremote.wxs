@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?define ProductVersion = "0.0.1"?>
-<?define ProductUpgradeCode = "12345678-1234-1234-1234-111111111111"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<?define ProductUpgradeCode = "504fc93b-c3a2-4916-a7f3-53bc04acf000"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" Name="Example Product Name" Version="$(var.ProductVersion)" Manufacturer="Example Company Name" Language="1033">
 		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" />
 		<Media Id="1" Cabinet="product.cab" EmbedCab="yes" />
@@ -13,31 +13,48 @@
 		<Property Id="ARPHELPLINK" Value="http://www.lunremote.pl" />
 		<Property Id="ARPURLINFOABOUT" Value="http://www.lunremote.pl" />
 		<Property Id="ARPNOREPAIR" Value="1" />
-		<!-- <Property Id="ARPNOMODIFY" Value="1" /> -->
 		<Upgrade Id="$(var.ProductUpgradeCode)">
 			<UpgradeVersion Minimum="$(var.ProductVersion)" OnlyDetect="yes" Property="NEWERVERSIONDETECTED" />
 			<UpgradeVersion Minimum="0.0.0" Maximum="$(var.ProductVersion)" IncludeMinimum="yes" IncludeMaximum="no" Property="OLDERVERSIONBEINGUPGRADED" />
 		</Upgrade>
+		<Condition Message="Only Windows 7 and up is supported">
+			<![CDATA[Installed OR VersionNT >= 601]]>
+		</Condition>
 		<Condition Message="A newer version of this software is already installed.">NOT NEWERVERSIONDETECTED</Condition>
 		<WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
+		<WixVariable Id="WixUIBannerBmp" Value="banner.bmp"/>
+		<WixVariable Id="WixUIDialogBmp" Value="dialog.bmp"/>
+		<DirectoryRef Id="TARGETDIR">
+			<Component Id="InstallRegistryComponent" Guid="504fc93b-c3a2-4916-a7f3-53bc04acf001">
+				<RegistryKey Id='ChessInfoBarInstallDir' Root='HKLM' Key='Software\Lunremote' ForceCreateOnInstall='yes' ForceDeleteOnUninstall='yes'>
+					<RegistryValue Type='string' Name='InstallDir' Value="[INSTALLDIR]" Action="write" KeyPath="yes" />
+				</RegistryKey>
+			</Component>
+		</DirectoryRef>
+		<InstallExecuteSequence>
+			<RemoveExistingProducts After="InstallValidate" />
+		</InstallExecuteSequence>
+		<Feature Id="DefaultFeature" Level="1">
+			<ComponentRef Id="ApplicationShortcuts" />
+			<ComponentRef Id="InstallRegistryComponent" />
+			<ComponentRef Id="ApplicationShortcutDesktop" />
+			<ComponentGroupRef Id="ProductComponents" />
+		</Feature>
+		<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/>
+		<UI>
+			<Publish Control="Finish" Dialog="ExitDialog" Event="DoAction" Value="StartGui">NOT Installed</Publish>
+		</UI>
+	</Product>
+	<Fragment>
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramFiles64Folder">
 				<Directory Id="INSTALLDIR" Name="Lunremote">
-
-					<Component Id="InstallRegistryComponent" Guid="*">
-            <RegistryKey Id='ChessInfoBarInstallDir' Root='HKLM' Key='Software\Lunremote' Action='createAndRemoveOnUninstall'>
-              <RegistryValue Type='string' Name='InstallDir' Value="[INSTALLDIR]" Action="write" KeyPath="yes" />
-              <!--<RegistryValue Type='integer' Name='Flag' Value='0'/>-->
-            </RegistryKey>
-          </Component>
-
-					<Component Id="ApplicationFiles" Guid="12345678-1234-1234-1234-222222222222">
-						<File Id="ApplicationFile1" Source="lunremote.exe" />
-					</Component>
+					<Directory Id="TstDir" Name="Tst"/>
+					<Directory Id="Tst2Dir" Name="Tst2"/>
 				</Directory>
 			</Directory>
 			<Directory Id="DesktopFolder" Name="Desktop">
-				<Component Id="ApplicationShortcutDesktop" Guid="*">
+				<Component Id="ApplicationShortcutDesktop" Guid="504fc93b-c3a2-4916-a7f3-53bc04acf002">
 					<Condition>INSTALLDESKTOPSHORTCUT</Condition>
 					<Shortcut Id="ApplicationDesktopShortcut" Name="Text under your icon" Description="Comment field in your shortcut" Target="[INSTALLDIR]lunremote.exe" WorkingDirectory="INSTALLDIR" />
 					<RemoveFolder Id="DesktopFolder" On="uninstall"/>
@@ -46,7 +63,7 @@
 			</Directory>
 			<Directory Id="ProgramMenuFolder">
 				<Directory Id="ProgramMenuSubfolder" Name="Lunremote">
-					<Component Id="ApplicationShortcuts" Guid="12345678-1234-1234-1234-333333333333">
+					<Component Id="ApplicationShortcuts" Guid="504fc93b-c3a2-4916-a7f3-53bc04acf003">
 						<Condition>INSTALLSHORTCUT</Condition>
 						<Shortcut Id="ApplicationShortcut1" Name="Example Shortcut Name" Description="Example Product Name" Target="[INSTALLDIR]lunremote.exe" WorkingDirectory="INSTALLDIR" />
 						<RegistryValue Root="HKCU" Key="Software\Lunremote" Name="installed" Type="integer" Value="1" KeyPath="yes" />
@@ -55,16 +72,24 @@
 				</Directory>
 			</Directory>
 		</Directory>
-		<InstallExecuteSequence>
-			<RemoveExistingProducts After="InstallValidate" />
-		</InstallExecuteSequence>
-		<Feature Id="DefaultFeature" Level="1">
-			<ComponentRef Id="ApplicationFiles" />
-			<ComponentRef Id="ApplicationShortcuts" />
-			<ComponentRef Id="InstallRegistryComponent" />
-			<ComponentRef Id="ApplicationShortcutDesktop" />
-		</Feature>
-		<!--	<CustomAction ExeCommand="" FileKey="GuiProgram" Id="StartGui" Return="asyncNoWait"/> -->
-		<UI />
-	</Product>
+	</Fragment>
+	<Fragment>
+		<ComponentGroup Directory="INSTALLDIR" Id="ProductComponents">
+			<Component Guid="504fc93b-c3a2-4916-a7f3-53bc04acf004" Id="Core">
+				<File KeyPath="yes" Source="lunremotesvc.exe"/>
+				<ServiceInstall Description="Controls the lunremote background processes." DisplayName="Lunremote Service" ErrorControl="normal" Id="ServiceInstall" Name="LunremoteSvc" Start="auto" Type="ownProcess">
+					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
+				</ServiceInstall>
+				<ServiceControl Id="ServiceControl" Name="LunremoteSvc" Remove="uninstall" Start="install" Stop="both"/>
+				<File Source="lunremoted.exe">
+					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Lunremote Server" Scope="any"/>
+				</File>
+			</Component>
+			<Component Guid="504fc93b-c3a2-4916-a7f3-53bc04acf005" Id="Gui">
+				<File Id="GuiProgram" KeyPath="yes" Source="lunremote.exe">
+					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="Lunremote Client" Scope="any"/>
+				</File>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
 </Wix>
