@@ -8,7 +8,7 @@
 		<UIRef Id="Custom_InstallDir"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 		<Property Id="INSTALLSHORTCUT" Secure="yes" />
-		<Icon Id="ProductIcon" SourceFile="lunremote.exe" />
+		<Icon Id="ProductIcon" SourceFile="../lunremote/lunremote.exe" />
 		<Property Id="ARPPRODUCTICON" Value="ProductIcon"/>
 		<Property Id="ARPHELPLINK" Value="http://www.lunremote.pl" />
 		<Property Id="ARPURLINFOABOUT" Value="http://www.lunremote.pl" />
