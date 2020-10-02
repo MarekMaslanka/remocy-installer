@@ -56,7 +56,7 @@
 			<Directory Id="DesktopFolder" Name="Desktop">
 				<Component Id="ApplicationShortcutDesktop" Guid="504fc93b-c3a2-4916-a7f3-53bc04acf002">
 					<Condition>INSTALLDESKTOPSHORTCUT</Condition>
-					<Shortcut Id="ApplicationDesktopShortcut" Name="Lunremote" Description="Lunremote application" Target="[INSTALLDIR]../lunremote/lunremote.exe" WorkingDirectory="INSTALLDIR" />
+					<Shortcut Id="ApplicationDesktopShortcut" Name="Lunremote" Description="Lunremote application" Target="[INSTALLDIR]lunremote.exe" WorkingDirectory="INSTALLDIR" />
 					<RemoveFolder Id="DesktopFolder" On="uninstall"/>
 					<RegistryValue Root="HKCU" Key="Software\Lunremote" Name="installed" Type="integer" Value="1" KeyPath="yes" />
 				</Component>
@@ -65,7 +65,7 @@
 				<Directory Id="ProgramMenuSubfolder" Name="Lunremote">
 					<Component Id="ApplicationShortcuts" Guid="504fc93b-c3a2-4916-a7f3-53bc04acf003">
 						<Condition>INSTALLSHORTCUT</Condition>
-						<Shortcut Id="ApplicationShortcut" Name="Lunremote" Description="Lunremote application" Target="[INSTALLDIR]../lunremote/lunremote.exe" WorkingDirectory="INSTALLDIR" />
+						<Shortcut Id="ApplicationShortcut" Name="Lunremote" Description="Lunremote application" Target="[INSTALLDIR]lunremote.exe" WorkingDirectory="INSTALLDIR" />
 						<RegistryValue Root="HKCU" Key="Software\Lunremote" Name="installed" Type="integer" Value="1" KeyPath="yes" />
 						<RemoveFolder Id="ProgramMenuSubfolder" On="uninstall" />
 					</Component>
@@ -76,11 +76,11 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLDIR" Id="ProductComponents">
 			<Component Guid="504fc93b-c3a2-4916-a7f3-53bc04acf004" Id="Core">
-				<File KeyPath="yes" Source="lunremotesvc.exe"/>
+				<!-- <File KeyPath="yes" Source="../lunremote/lunremotesvc.exe"/>
 				<ServiceInstall Description="Controls the lunremote background processes." DisplayName="Lunremote Service" ErrorControl="normal" Id="ServiceInstall" Name="LunremoteSvc" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
-				<ServiceControl Id="ServiceControl" Name="LunremoteSvc" Remove="uninstall" Start="install" Stop="both"/>
+				<ServiceControl Id="ServiceControl" Name="LunremoteSvc" Remove="uninstall" Start="install" Stop="both"/> -->
 				<File Source="../lunremote/lunremoted.exe">
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Lunremote Server" Scope="any"/>
 				</File>
