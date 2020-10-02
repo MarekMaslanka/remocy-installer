@@ -32,9 +32,6 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: installer
-        repository: MarekMaslanka/remocy-installer
-#         ref: build
-        token: ${{ secrets.ACCESS_TOKEN }}
 
     - name: Installing system libs
       shell: cmake -P {0}
