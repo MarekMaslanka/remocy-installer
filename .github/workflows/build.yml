@@ -3,13 +3,7 @@ name: Build All
 on: [push]
 
 env:
-  QT_VERSION: 5.15.1
-  QT_CREATOR_VERSION: 4.12.3
-  SERVER_APPLICATION_NAME: lunremote-server
-  SERVER_APPLICATION_PRO: remocy-supervisor.pro
-  CLIENT_APPLICATION_NAME: lunremote
-  CLIENT_APPLICATION_PRO: remocy-client.pro
-  DAEMON_APPLICATION_NAME: lunremoted
+  APPLICATION_NAME: lunremote
   APPLICATION_VERSION: 0.7.0
 
 jobs:
@@ -37,7 +31,7 @@ jobs:
     - name: Checkout installer
       uses: actions/checkout@v2
       with:
-        path: client
+        path: installer
         repository: MarekMaslanka/remocy-installer
 #         ref: build
         token: ${{ secrets.ACCESS_TOKEN }}
@@ -58,6 +52,7 @@ jobs:
       run: |
         set(wix_candle "wix311-binaries/candle.exe")
         execute_process(
+            COMMAND cd installer
             COMMAND "${wix_candle} -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs"
           )
 
@@ -66,13 +61,14 @@ jobs:
       run: |
         set(wix_light "wix311-binaries/light.exe")
         execute_process(
+            COMMAND cd installer
             COMMAND "${wix_light} -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi"
           )
 
     - uses: actions/upload-artifact@v1
       id: upload_win_msi_installer
       with:
-        path: ./lunremote.msi
+        path: ./installer/lunremote.msi
         name: lunremote.msi
 
   deploy:
