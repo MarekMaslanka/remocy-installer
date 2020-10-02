@@ -44,23 +44,16 @@ jobs:
         endif()
 
     - name: Configure Wix installer
-      id: qt_creator
-      shell: cmake -P {0}
+      id: wix_configure
       run: |
-        set(wix_candle "../wix/candle.exe")
-        execute_process(
-            COMMAND cd installer
-            COMMAND "${wix_candle} -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs"
-          )
+        cd installer
+        ../wix/candle.exe -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs
 
     - name: Build MSI installer
       shell: cmake -P {0}
       run: |
-        set(wix_light "../wix/light.exe")
-        execute_process(
-            COMMAND cd installer
-            COMMAND "${wix_light} -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi"
-          )
+        cd installer
+        ../wix/candle.exe -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi
 
     - uses: actions/upload-artifact@v1
       id: upload_win_msi_installer
