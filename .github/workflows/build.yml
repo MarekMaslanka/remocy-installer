@@ -38,16 +38,16 @@ jobs:
       run: |
         if ("${{ runner.os }}" STREQUAL "Windows")
           file(DOWNLOAD "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip" wix311-binaries.zip)
-          file(ARCHIVE_EXTRACT INPUT wix311-binaries.zip)
+          file(ARCHIVE_EXTRACT INPUT wix311-binaries.zip DESTINATION wix)
           execute_process(COMMAND dir)
-          execute_process(COMMAND dir wix311-binaries)
+          execute_process(COMMAND dir wix)
         endif()
 
     - name: Configure Wix installer
       id: qt_creator
       shell: cmake -P {0}
       run: |
-        set(wix_candle "wix311-binaries/candle.exe")
+        set(wix_candle "../wix/candle.exe")
         execute_process(
             COMMAND cd installer
             COMMAND "${wix_candle} -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs"
@@ -56,7 +56,7 @@ jobs:
     - name: Build MSI installer
       shell: cmake -P {0}
       run: |
-        set(wix_light "wix311-binaries/light.exe")
+        set(wix_light "../wix/light.exe")
         execute_process(
             COMMAND cd installer
             COMMAND "${wix_light} -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi"
