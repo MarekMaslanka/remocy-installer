@@ -39,20 +39,13 @@ jobs:
         if ("${{ runner.os }}" STREQUAL "Windows")
           file(DOWNLOAD "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip" wix311-binaries.zip)
           file(ARCHIVE_EXTRACT INPUT wix311-binaries.zip DESTINATION wix)
-          execute_process(COMMAND dir)
-          execute_process(COMMAND dir wix)
         endif()
-
-    - name: Configure Wix installer
-      id: wix_configure
-      run: |
-        cd installer
-        ../wix/candle.exe -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs
 
     - name: Build MSI installer
       run: |
         cd installer
-        ../wix/candle.exe -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi
+        ../wix/candle.exe -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs
+        ../wix/light.exe -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi
 
     - uses: actions/upload-artifact@v1
       id: upload_win_msi_installer
