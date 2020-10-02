@@ -42,7 +42,7 @@ jobs:
         endif()
 
     - name: Build MSI installer
-      if: startsWith(matrix.os, 'w')
+      if: matrix.config.os == 'windows-latest'
       run: |
         cd installer
         ../wix/candle.exe -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs
