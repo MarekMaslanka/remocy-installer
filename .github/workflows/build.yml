@@ -1,0 +1,125 @@
+name: Build All
+
+on: [push]
+
+env:
+  QT_VERSION: 5.15.1
+  QT_CREATOR_VERSION: 4.12.3
+  SERVER_APPLICATION_NAME: lunremote-server
+  SERVER_APPLICATION_PRO: remocy-supervisor.pro
+  CLIENT_APPLICATION_NAME: lunremote
+  CLIENT_APPLICATION_PRO: remocy-client.pro
+  DAEMON_APPLICATION_NAME: lunremoted
+  APPLICATION_VERSION: 0.7.0
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      matrix:
+        config:
+        - {
+            name: "Windows Latest x64", artifact: "Windows-x64.zip",
+            os: windows-latest,
+            environment_script: "C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvars64.bat"
+          }
+#         - {
+#             name: "Linux Latest x64", artifact: "Linux-x64.tar.gz",
+#             os: ubuntu-latest
+#           }
+#         - {
+#             name: "macOS Latest x64", artifact: "macOS-x64.zip",
+#             os: macos-latest
+#           }
+
+    steps:
+    - name: Checkout installer
+      uses: actions/checkout@v2
+      with:
+        path: client
+        repository: MarekMaslanka/remocy-installer
+#         ref: build
+        token: ${{ secrets.ACCESS_TOKEN }}
+
+    - name: Installing system libs
+      shell: cmake -P {0}
+      run: |
+        if ("${{ runner.os }}" STREQUAL "Windows")
+          file(DOWNLOAD "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip" wix311-binaries.zip)
+          file(ARCHIVE_EXTRACT INPUT wix311-binaries.zip)
+          execute_process(COMMAND dir)
+          execute_process(COMMAND dir wix311-binaries)
+        endif()
+
+    - name: Configure Wix installer
+      id: qt_creator
+      shell: cmake -P {0}
+      run: |
+        set(wix_candle "wix311-binaries/candle.exe")
+        execute_process(
+            COMMAND "${wix_candle} -arch x64 -ext WixUtilExtension -ext WixFirewallExtension lunremote.wxs Custom_InstallDir.wxs Custom_InstallDirDlg.wxs"
+          )
+
+    - name: Build MSI installer
+      shell: cmake -P {0}
+      run: |
+        set(wix_light "wix311-binaries/light.exe")
+        execute_process(
+            COMMAND "${wix_light} -ext WixUIExtension -ext WixUtilExtension -ext WixFirewallExtension lunremote.wixobj Custom_InstallDir.wixobj Custom_InstallDirDlg.wixobj -out lunremote.msi"
+          )
+
+    - uses: actions/upload-artifact@v1
+      id: upload_win_msi_installer
+      with:
+        path: ./lunremote.msi
+        name: lunremote.msi
+
+  deploy:
+    if: contains(github.ref, 'tags/v')
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        config:
+        - {
+            name: "Windows Latest x64", artifact: "Windows-x64.zip",
+            os: windows-latest
+          }
+#         - {
+#             name: "Linux Latest x64", artifact: "Linux-x64.tar.gz",
+#             os: ubuntu-latest
+#           }
+#         - {
+#             name: "macOS Latest x64", artifact: "macOS-x64.zip",
+#             os: macos-latest
+#           }
+    needs: build
+
+    steps:
+    - name: Download Win MSI installer
+      uses: actions/download-artifact@v1
+      with:
+        name: lunremote.msi
+        path: ./
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+
+    - name: Deploy Win MSI Installer
+      id: msi_upload_to_release
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./lunremote.msi
+        asset_name: lunremote.msi
+        asset_content_type: application/msi
