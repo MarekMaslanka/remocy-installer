@@ -1,0 +1,9 @@
+Package: lunremote
+Version: 0.0.0
+Section: custom
+Priority: optional
+Architecture: all
+Essential: no
+Installed-Size: 1024
+Maintainer: lunremote.com
+Description: Lunremote for accessing to remote desktop
