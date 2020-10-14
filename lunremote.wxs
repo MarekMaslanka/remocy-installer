@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?define ProductUpgradeCode = "504fc93b-c3a2-4916-a7f3-53bc04acf000"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 	<Product Id="*" UpgradeCode="$(var.ProductUpgradeCode)" Name="Lunremote" Version="$(var.ProductVersion)" Manufacturer="Lunremote" Language="1033">
 		<Package InstallerVersion="200" Compressed="yes" Comments="Windows Installer Package" />
