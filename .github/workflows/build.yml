@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: 'size'
         run: |
-          s=`du -k ./ | tail -n 1 | cut -f 1`
-          echo $s
+          ls -l
+          ls -l /tmp
+          size=`du -k ./ | tail -n 1 | cut -f 1`
+          echo $size
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
