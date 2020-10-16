@@ -44,9 +44,9 @@ jobs:
     - name: Replace size
       if: matrix.config.os == 'ubuntu-latest'
       run: |
-        size=`du -k ./installer | tail -n 1 | cut -f 1`
+        size=`du -k --exclude="./installer/.git" ./installer | tail -n 1 | cut -f 1`
         echo $size
-        sed -i 's/1024/${size}/g' installer/lunremote/DEBIAN/control
+        sed -i 's/1024/'"${size}"'/g' installer/lunremote/DEBIAN/control
         cat installer/lunremote/DEBIAN/control
 
     - name: Installing system libs
