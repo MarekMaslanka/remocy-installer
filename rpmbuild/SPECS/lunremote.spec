@@ -11,6 +11,9 @@ Vendor:     Lunremote
 %description
 Lunremote is the fastest application to access to remote desktop.
 
+%define __requires_exclude libavcodec.*
+%define __requires_exclude libavutil.*
+
 %prep
 
 %setup -T -c
