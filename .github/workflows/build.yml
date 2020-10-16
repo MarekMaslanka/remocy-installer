@@ -7,6 +7,14 @@ env:
   APPLICATION_VERSION: 0.7.0
 
 jobs:
+  tst:
+    name: 'size test'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'size'
+        run: |
+          s=`du -k ./ | tail -n 1 | cut -f 1`
+          echo $s
   build:
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
