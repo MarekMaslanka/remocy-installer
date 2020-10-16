@@ -13,8 +13,6 @@ jobs:
     steps:
       - name: 'size'
         run: |
-          ls -l
-          ls -l /tmp
           size=`du -k ./ | tail -n 1 | cut -f 1`
           echo $size
   build:
@@ -42,6 +40,13 @@ jobs:
       uses: actions/checkout@v2
       with:
         path: installer
+    
+    - name: Replace size
+      run: |
+        size=`du -k ./installer | tail -n 1 | cut -f 1`
+        echo $size
+        sed -i 's/1024/$size/g' installer/lunremote/DEBIAN/control
+        cat installer/lunremote/DEBIAN/control
 
     - name: Installing system libs
       shell: cmake -P {0}
