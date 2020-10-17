@@ -7,7 +7,6 @@ Essential: no
 Installed-Size: 1024
 Depends: libxcb-xinerama0
 Maintainer: lunremote.com
-Description: Lunremote for accessing to remote desktop
 Description: Lunremote allows one to view remotely and interact with real
  screen (i.e. a display corresponding to a physical monitor, keyboard, and mouse)
  for Linux, Windows and macOS. Lunremote is optimized for low lantency and
