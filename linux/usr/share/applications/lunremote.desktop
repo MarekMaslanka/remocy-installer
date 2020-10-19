@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Lunremote
+Comment=Low-lantency access to remote desktop
+Exec=/usr/bin/lunremote
+Icon=lunremote
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Network;RemoteAccess;

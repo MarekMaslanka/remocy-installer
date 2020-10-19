@@ -1,0 +1,5 @@
+?package(opera-stable):needs="x11" \
+        section="Applications/Network/Communication" \
+        title="Lunremote" \
+        icon="/usr/share/pixmaps/lunremote.svg" \
+        command="/usr/bin/lunremote"
