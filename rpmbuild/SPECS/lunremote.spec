@@ -6,6 +6,7 @@ Group:      Applications/Utils
 License:    Proprietary
 URL:        www.lunremote.com
 Source0:    artifact.tar
+Source1:    data.tar
 Vendor:     Lunremote
 
 %description
@@ -29,6 +30,8 @@ mkdir -p "%{buildroot}"
 
 mkdir -p %{buildroot}/opt/lunremote
 tar -xf %{SOURCE0} -C %{buildroot}/opt/lunremote/ --strip=1
+
+tar -xf %{SOURCE1} -C %{buildroot}
 
 mkdir -p %{buildroot}/%{_bindir}/
 ln -s /opt/lunremote/lunremote %{buildroot}/%{_bindir}/lunremote
