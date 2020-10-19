@@ -33,7 +33,7 @@ mkdir -p "%{buildroot}"
 mkdir -p %{buildroot}/opt/lunremote
 tar -xf %{SOURCE0} -C %{buildroot}/opt/lunremote/ --strip=1
 
-ln -s %{buildroot}/opt/lunremote/lunremote %{_bindir}/%{appname}
+ln -s %{buildroot}/opt/lunremote/lunremote %{buildroot}/%{_bindir}/%{appname}
 # Fix the location of the doc directory on OpenSUSE
 %if 0%{?suse_version}
   mkdir -p "%{buildroot}/%{_defaultdocdir}"
