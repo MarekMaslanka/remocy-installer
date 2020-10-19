@@ -64,6 +64,7 @@ rm -rf %{buildroot}
 # %{_defaultdocdir}/%{name}
 %{_bindir}/lunremote
 # %{_libdir}/%{appname}
-# %{_datadir}/applications/*.desktop
-# %{_datadir}/icons/*
-# %{_datadir}/pixmaps/*
+%{_datadir}/applications/*.desktop
+%{_datadir}/icons/*
+%{_datadir}/pixmaps/*
+%{_datadir}/menu/*
