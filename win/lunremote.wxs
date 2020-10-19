@@ -7,7 +7,7 @@
 		<UIRef Id="Custom_InstallDir"/>
 		<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 		<Property Id="INSTALLSHORTCUT" Secure="yes" />
-		<Icon Id="ProductIcon" SourceFile="../artifact/lunremote.exe" />
+		<Icon Id="ProductIcon" SourceFile="../../artifact/lunremote.exe" />
 		<Property Id="ARPPRODUCTICON" Value="ProductIcon"/>
 		<Property Id="ARPHELPLINK" Value="http://www.lunremote.pl" />
 		<Property Id="ARPURLINFOABOUT" Value="http://www.lunremote.pl" />
@@ -76,17 +76,17 @@
 	<Fragment>
 		<ComponentGroup Directory="INSTALLDIR" Id="ProductComponents">
 			<Component Guid="504fc93b-c3a2-4916-a7f3-53bc04acf004" Id="Core">
-				<File KeyPath="yes" Source="../artifact/lunremotesvc.exe"/>
+				<File KeyPath="yes" Source="../../artifact/lunremotesvc.exe"/>
 				<ServiceInstall Description="Controls the lunremote background processes." DisplayName="Lunremote Service" ErrorControl="normal" Id="ServiceInstall" Name="LunremoteSvc" Start="auto" Type="ownProcess">
 					<util:ServiceConfig FirstFailureActionType="restart" ResetPeriodInDays="1" RestartServiceDelayInSeconds="1" SecondFailureActionType="restart" ThirdFailureActionType="restart"/>
 				</ServiceInstall>
 				<ServiceControl Id="ServiceControl" Name="LunremoteSvc" Remove="uninstall" Start="install" Stop="both"/>
-				<File Source="../artifact/lunremoted.exe">
+				<File Source="../../artifact/lunremoted.exe">
 					<fire:FirewallException Id="ServerFirewallException" IgnoreFailure="yes" Name="Lunremote Server" Scope="any"/>
 				</File>
 			</Component>
 			<Component Guid="504fc93b-c3a2-4916-a7f3-53bc04acf005" Id="Gui">
-				<File Id="GuiProgram" KeyPath="yes" Source="../artifact/lunremote.exe">
+				<File Id="GuiProgram" KeyPath="yes" Source="../../artifact/lunremote.exe">
 					<fire:FirewallException Id="GuiFirewallException" IgnoreFailure="yes" Name="Lunremote Client" Scope="any"/>
 				</File>
 			</Component>
