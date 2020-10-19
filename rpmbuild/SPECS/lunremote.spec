@@ -62,7 +62,7 @@ rm -rf %{buildroot}
 %files
 /opt/lunremote/*
 # %{_defaultdocdir}/%{name}
-# %{_bindir}/%{appname}
+%{_bindir}/%{appname}
 # %{_libdir}/%{appname}
 # %{_datadir}/applications/*.desktop
 # %{_datadir}/icons/*
