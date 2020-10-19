@@ -1,5 +1,5 @@
-Summary:    Lunremote allow access to remote desktop
-Name:       Lunremote
+Summary:    Low-lantency access to remote desktop
+Name:       lunremote
 Version:    0.0.1
 Release:    0
 Group:      Applications/Utils
@@ -9,10 +9,15 @@ Source0:    artifact.tar
 Vendor:     Lunremote
 
 %description
-Lunremote is the fastest application to access to remote desktop.
+Lunremote allows one to view remotely and interact with real screen
+(i.e. a display corresponding to a physical monitor, keyboard, and mouse)
+for Linux, Windows and macOS. Lunremote is optimized for low lantency and it's
+currently the fastest tool to remotly controlling desktop.
 
 %define __requires_exclude libavcodec.*
 %define __requires_exclude libavutil.*
+%define __requires_exclude libopenh264.*
+%define __requires_exclude libopenh264.so.5
 
 %prep
 
@@ -28,6 +33,7 @@ mkdir -p "%{buildroot}"
 mkdir -p %{buildroot}/opt/lunremote
 tar -xf %{SOURCE0} -C %{buildroot}/opt/lunremote/ --strip=1
 
+ln -s %{buildroot}/opt/lunremote/lunremote %{_bindir}/%{appname}
 # Fix the location of the doc directory on OpenSUSE
 %if 0%{?suse_version}
   mkdir -p "%{buildroot}/%{_defaultdocdir}"
