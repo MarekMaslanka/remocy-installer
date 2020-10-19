@@ -14,9 +14,6 @@ Lunremote allows one to view remotely and interact with real screen
 for Linux, Windows and macOS. Lunremote is optimized for low lantency and it's
 currently the fastest tool to remotly controlling desktop.
 
-%define __requires_exclude libavcodec.*
-%define __requires_exclude libavutil.*
-%define __requires_exclude libopenh264.*
 %define __requires_exclude libopenh264.so.5
 
 %prep
