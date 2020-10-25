@@ -8,14 +8,16 @@ URL:        www.lunremote.com
 Source0:    artifact.tar
 Source1:    data.tar
 Vendor:     Lunremote
+BuildRequires: systemd-rpm-macros
 
 %description
 Lunremote allows one to view remotely and interact with real screen
 (i.e. a display corresponding to a physical monitor, keyboard, and mouse)
-for Linux, Windows and macOS. Lunremote is optimized for low lantency and it's
-currently the fastest tool to remotly controlling desktop.
+for Linux, Windows and macOS. Lunremote is optimized for low lantency
+and it's currently the fastest tool to remotly controlling desktop.
 
 %define __requires_exclude libopenh264.so.5
+%global debug_package %{nil}
 
 %prep
 
@@ -35,13 +37,10 @@ tar -xf %{SOURCE1} -C %{buildroot}
 
 mkdir -p %{buildroot}/%{_bindir}/
 ln -s /opt/lunremote/lunremote %{buildroot}/%{_bindir}/lunremote
-# Fix the location of the doc directory on OpenSUSE
-%if 0%{?suse_version}
-  mkdir -p "%{buildroot}/%{_defaultdocdir}"
-  mv "%{buildroot}/usr/share/doc/%{name}" "%{buildroot}/%{_defaultdocdir}/%{name}" 2>/dev/null ||:
-%endif
 
 %post
+
+%systemd_post lunremote.service
 
 # Setup icons
 touch -c /usr/share/icons/hicolor
@@ -54,16 +53,19 @@ if command -v update-desktop-database >/dev/null 2>&1; then
   update-desktop-database -q /usr/share/applications 2>/dev/null ||:
 fi
 
+%preun
+%systemd_preun lunremote.service
+
 %postun
+%systemd_postun_with_restart lunremote.service
 
 %clean
 rm -rf %{buildroot}
 
 %files
 /opt/lunremote/*
-# %{_defaultdocdir}/%{name}
+/usr/lib/systemd/system/lunremote.service
 %{_bindir}/lunremote
-# %{_libdir}/%{appname}
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/*
 %{_datadir}/pixmaps/*

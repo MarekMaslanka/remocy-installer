@@ -1,0 +1,14 @@
+[Unit]
+Description=Lunremote Server Daemon
+Requires=graphical.target
+After=graphical.target
+
+[Service]
+Type=simple
+ExecStart=/opt/lunremote/lunremoted.sh
+ExecStop=/bin/pkill -P $MAINPID
+PIDFile=/run/lunremoted.pid
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
