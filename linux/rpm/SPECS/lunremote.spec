@@ -36,9 +36,6 @@ chmod -R 755 %{buildroot}/usr/share/icons/
 mkdir -p %{buildroot}/%{_bindir}/
 ln -s /opt/lunremote/lunremote %{buildroot}/%{_bindir}/lunremote
 
-%pre
-%systemd_pre lunremote.service
-
 %post
 %systemd_post lunremote.service
 

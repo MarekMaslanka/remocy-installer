@@ -46,8 +46,8 @@ jobs:
       run: |
         size=`du -k --exclude="./installer/.git" ./installer | tail -n 1 | cut -f 1`
         echo $size
-        sed -i 's/1024/'"${size}"'/g' installer/lunremote/DEBIAN/control
-        cat installer/lunremote/DEBIAN/control
+        sed -i 's/1024/'"${size}"'/g' installer/lunremote/debian/control
+        cat installer/lunremote/debian/control
 
     - name: Installing system libs
       shell: cmake -P {0}
