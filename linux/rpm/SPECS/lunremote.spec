@@ -21,8 +21,6 @@ and it's currently the fastest tool to remotly controlling desktop.
 
 %prep
 
-%setup -T -c
-
 %build
 
 %install
@@ -32,14 +30,16 @@ mkdir -p "%{buildroot}"
 
 mkdir -p %{buildroot}/opt/lunremote
 tar -xf %{SOURCE0} -C %{buildroot}/opt/lunremote/ --strip=1
-
 tar -xf %{SOURCE1} -C %{buildroot}
+chmod -R 755 %{buildroot}/usr/share/icons/
 
 mkdir -p %{buildroot}/%{_bindir}/
 ln -s /opt/lunremote/lunremote %{buildroot}/%{_bindir}/lunremote
 
-%post
+%pre
+%systemd_pre lunremote.service
 
+%post
 %systemd_post lunremote.service
 
 # Setup icons
