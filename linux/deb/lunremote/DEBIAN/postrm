@@ -1,0 +1,7 @@
+#!/bin/sh
+GDM3_FILE=/etc/gdm3/custom.conf
+if [ -f "$GDM3_FILE" ]; then
+	if [ $(grep -c " # lunremote" $GDM3_FILE) -ne 0 ]; then
+		sed -i '/WaylandEnable=false # lunremote/d' $GDM3_FILE
+	fi
+fi
